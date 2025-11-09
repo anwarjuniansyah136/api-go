@@ -1,0 +1,16 @@
+package model
+
+import "time"
+
+type AttendanceSession struct {
+	ID        uint64    `json:"id" gorm:"primaryKey;autoIncrement"`
+	SchoolID  uint64    `json:"-"`
+	Name      string    `json:"name" gorm:"size:100;not null"`
+	StartTime time.Time `json:"start_time" gorm:"not null"`
+	EndTime   time.Time `json:"end_time" gorm:"not null"`
+	CreatedBy uint64    `json:"-"`
+	CreatedAt time.Time `json:"-"`
+
+	School School `json:"school" binding:"required" gorm:"foreignKey:SchoolID;references:ID"`
+	User User `json:"user" binding:"required" gorm:"foreignKey:CreatedBy;references:ID"`
+}
