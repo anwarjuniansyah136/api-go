@@ -1,0 +1,26 @@
+package service
+
+import (
+	"api/modules/repository"
+
+	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
+)
+
+type TeacherService interface {
+	Create(ctx *gin.Context)
+}
+
+type teacherService struct {
+	repository repository.TeacherRepository
+}
+
+func NewTeacherRepository(db *gorm.DB) TeacherService {
+	return &teacherService{
+		repository: repository.NewTeacherRepository(db),
+	}
+}
+
+func (t *teacherService) Create(ctx *gin.Context) {
+	panic("unimplemented")
+}
