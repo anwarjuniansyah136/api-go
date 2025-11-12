@@ -3,7 +3,7 @@ package model
 import "time"
 
 type Student struct {
-	ID           uint64    `json:"id" gorm:"primaryKey;autoIncrement"`
+	ID           uint64    `gorm:"primaryKey;autoIncrement"`
 	UserID       uint64    `json:"-"`
 	NISN         string    `json:"nisn" gorm:"type:varchar(20);unique;not null" `
 	RoomID       uint64    `json:"-"`

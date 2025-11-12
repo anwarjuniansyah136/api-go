@@ -3,7 +3,7 @@ package model
 import "time"
 
 type DeviceLog struct {
-	ID        uint64    `json:"id" gorm:"primaryKey;autoIncrement"`
+	ID        uint64    `gorm:"primaryKey;autoIncrement"`
 	UserID    uint64    `json:"-"`
 	DeviceID  string    `json:"devide_id" gorm:"size:100;not null"`
 	Platform  string    `json:"platform" gorm:"size:50"`

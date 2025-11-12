@@ -3,7 +3,7 @@ package model
 import "time"
 
 type School struct {
-	ID          uint64  `json:"id" gorm:"primaryKey;autoIncrement"`
+	ID          uint64  `gorm:"primaryKey;autoIncrement"`
 	SchoolName  string  `json:"school_name" gorm:"size:255;not null"`
 	Address     string  `json:"address" gorm:"type:text;not null"`
 	Latitude    float64 `json:"latitude,omitempty" gorm:"type:decimal(10,8);not null"`

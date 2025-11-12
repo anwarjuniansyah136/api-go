@@ -5,7 +5,7 @@ import (
 )
 
 type Teacher struct {
-	ID        uint64 `json:"id" gorm:"primaryKey;autoIncrement"`
+	ID        uint64 `gorm:"primaryKey;autoIncrement"`
 	Name      string `json:"name" binding:"required" gorm:"size:255;not null"`
 	Address   string `json:"address" binding:"required" gorm:"size:255;not null"`
 	Age       int `json:"age" binding:"required" gorm:"not null"`

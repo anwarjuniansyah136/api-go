@@ -3,7 +3,7 @@ package model
 import "time"
 
 type AttendanceSession struct {
-	ID        uint64    `json:"id" gorm:"primaryKey;autoIncrement"`
+	ID        uint64    `gorm:"primaryKey;autoIncrement"`
 	SchoolID  uint64    `json:"-"`
 	Name      string    `json:"name" gorm:"size:100;not null"`
 	StartTime time.Time `json:"start_time" gorm:"not null"`

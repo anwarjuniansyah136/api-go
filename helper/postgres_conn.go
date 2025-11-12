@@ -1,6 +1,8 @@
 package helper
 
 import (
+	"api/modules/model"
+
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
@@ -16,12 +18,24 @@ func OpenDB(conn, schm, ver string) *gorm.DB {
 	})
 
 	if err  != nil {
-		panic("failed connect to database")
+		panic("failed connect to database " + err.Error())
 	}
 
 	db.Exec("CREATE SCHEMA IF NOT EXISTS " + schm)
 
-	err = db.AutoMigrate()
+	err = db.AutoMigrate(
+		&model.AttendanceRecord{},
+		&model.AttendanceSession{},
+		&model.DeviceLog{},
+		&model.Role{},
+		&model.Room{},
+		&model.ScheduleClass{},
+		&model.School{},
+		&model.Student{},
+		&model.Subject{},
+		&model.Teacher{},
+		&model.User{},
+	)
 
 	if err  != nil {
 		panic("failed to migrate database")

@@ -3,7 +3,7 @@ package model
 import "time"
 
 type Subject struct {
-	ID          uint64    `json:"id" gorm:"primaryKey;autoIncrement"`
+	ID          uint64    `gorm:"primaryKey;autoIncrement"`
 	SchoolID    uint64    `json:"-"`
 	SubjectCode string    `json:"subject_code" gorm:"size:100;not null"`
 	SubjectName string    `json:"subject_name" gorm:"size:100;not null"`

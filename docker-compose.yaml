@@ -11,7 +11,6 @@ services:
       POSTGRES_DB: api
     volumes:
       - postgres-data-api:/var/lib/postgresql/data
-
   
 volumes:
   postgres-data-api:
