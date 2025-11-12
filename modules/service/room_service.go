@@ -15,7 +15,7 @@ type roomService struct {
 	repository repository.RoomRepository
 }
 
-func NewRoomRepository(db *gorm.DB) RoomService {
+func NewRoomService(db *gorm.DB) RoomService {
 	return &roomService{
 		repository: repository.NewRoomRepository(db),
 	}

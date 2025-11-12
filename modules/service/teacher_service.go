@@ -15,7 +15,7 @@ type teacherService struct {
 	repository repository.TeacherRepository
 }
 
-func NewTeacherRepository(db *gorm.DB) TeacherService {
+func NewTeacherService(db *gorm.DB) TeacherService {
 	return &teacherService{
 		repository: repository.NewTeacherRepository(db),
 	}
