@@ -2,12 +2,14 @@ package repository
 
 import (
 	"api/modules/model"
+	"time"
 
 	"gorm.io/gorm"
 )
 
 type AttendanceRecordRepository interface {
-	Save(attendanceRecordRepository model.AttendanceRecord) (*model.AttendanceRecord, error)
+	Save(attendanceRecord model.AttendanceRecord) (*model.AttendanceRecord, error)
+	FindAll() (*[]model.AttendanceRecord, error)
 }
 
 type attendanceRecordRepository struct {
@@ -20,6 +22,24 @@ func NewAttendanceRecordRepository(db *gorm.DB) AttendanceRecordRepository {
 	}
 }
 
-func (a *attendanceRecordRepository) Save(attendanceRecordRepository model.AttendanceRecord) (*model.AttendanceRecord, error) {
-	panic("unimplemented")
+func (a *attendanceRecordRepository) Save(attendanceRecord model.AttendanceRecord) (*model.AttendanceRecord, error) {
+	attendanceRecord.CreatedAt = time.Now()
+	attendanceRecord.UpdatedAt = time.Now()
+
+	if err := a.conn.Create(&attendanceRecord).Error; err != nil {
+		return nil, err
+	}
+
+	return &attendanceRecord, nil
+}
+
+func (a *attendanceRecordRepository) FindAll() (*[]model.AttendanceRecord, error) {
+	var attendanceRecords []model.AttendanceRecord
+
+	err := a.conn.Find(&attendanceRecords).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return &attendanceRecords, nil
 }

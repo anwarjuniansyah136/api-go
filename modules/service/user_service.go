@@ -5,6 +5,7 @@ import (
 	"api/modules/model"
 	"api/modules/repository"
 	"net/http"
+	// "strconv"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -12,6 +13,8 @@ import (
 
 type UserService interface {
 	Create(ctx *gin.Context)
+	GetAllUser(ctx *gin.Context)
+	// Update(ctx *gin.Context)
 }
 
 type userService struct {
@@ -35,7 +38,7 @@ func (u *userService) Create(ctx *gin.Context) {
 
 	user := model.User{
 		FullName: input.FullName,
-		Email: input.Email,
+		Email:    input.Email,
 		Password: helper.HashedPassword(input.Password),
 	}
 
@@ -52,7 +55,18 @@ func (u *userService) Create(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, result)
 }
 
-func createEmail(name, email string){
+func (u *userService) GetAllUser(ctx *gin.Context) {
+	result, err := u.repository.FindAll()
+	if err != nil {
+		ctx.JSON(http.StatusUnprocessableEntity, gin.H{
+			"error": err.Error(),
+		})
+	}
+
+	ctx.JSON(http.StatusOK, result)
+}
+
+func createEmail(name, email string) {
 	body := `
 		<h2>Selamat datang, ` + name + `!</h2>
 		<p>Akun kamu berhasil dibuat dengan email: ` + email + `</p>

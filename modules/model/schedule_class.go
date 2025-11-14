@@ -19,3 +19,13 @@ type ScheduleClass struct {
 	Teacher Teacher `json:"teacher" binding:"required" gorm:"foreignKey:TeacherID;references:ID"`
 	Room Room `json:"room" binding:"required" gorm:"foreignKey:RoomID;references:ID"`
 }
+
+type ScheduleClassCreate struct {
+	SchoolID uint64 `json:"school_id" binding:"required"`
+	ClassName string `json:"class_name" binding:"required"`
+	SubjectID uint64 `json:"subject_id" binding:"required"`
+	TeacherID uint64 `json:"steacher_id" binding:"required"`
+	StartTime string `json:"start_time" binding:"required"`
+	EndTime string `json:"end_time" binding:"required"`
+	RoomID uint64 `json:"role_id" binding:"required"`
+}

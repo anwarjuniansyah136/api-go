@@ -9,6 +9,7 @@ import (
 
 type TeacherService interface {
 	Create(ctx *gin.Context)
+	GetAllTeacher(ctx *gin.Context)
 }
 
 type teacherService struct {
@@ -22,5 +23,10 @@ func NewTeacherService(db *gorm.DB) TeacherService {
 }
 
 func (t *teacherService) Create(ctx *gin.Context) {
+	panic("unimplemented")
+}
+
+
+func (t *teacherService) GetAllTeacher(ctx *gin.Context) {
 	panic("unimplemented")
 }

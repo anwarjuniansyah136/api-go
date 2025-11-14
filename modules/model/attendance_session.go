@@ -14,3 +14,10 @@ type AttendanceSession struct {
 	School School `json:"school" binding:"required" gorm:"foreignKey:SchoolID;references:ID"`
 	User User `json:"user" binding:"required" gorm:"foreignKey:CreatedBy;references:ID"`
 }
+
+type AttendanceSessionCreate struct {
+	SchoolID uint64 `json:"school_id" binding:"required"`
+	Name string `json:"name" binding:"required"`
+	StartTime string `json:"start_time" binding:"required"`
+	EndTime string `json:"end_time" binding:"required"`
+} 

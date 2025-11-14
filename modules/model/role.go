@@ -10,3 +10,7 @@ type Role struct {
 
 	User []User `gorm:"foreignKey:RoleID" json:"users,omitempty"`
 }
+
+type RoleCreate struct {
+	Name string `json:"name" binding:"required"`
+}

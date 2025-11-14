@@ -12,3 +12,11 @@ type School struct {
 	CreateAt    time.Time `json:"-"`
 	UpdateAt time.Time `json:"-"`
 }
+
+type SchoolCreate struct {
+	SchoolName string `json:"school_name" binding:"required"`
+	Address string `json:"address" binding:"required"`
+	Latitude float64 `json:"latitude" binding:"required"`
+	Longitude float64 `json:"longitude" binding:"required"`
+	RadiusMeter float64 `json:"radius_meter" binding:"required"`
+}

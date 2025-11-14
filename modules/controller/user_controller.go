@@ -30,5 +30,7 @@ func (u *userController) Init() {
 	user := u.apiRoutes.Group("/v1/user")
 	{
 		user.POST("/create", userService.Create)
+		user.GET("/find-all", userService.GetAllUser)
+		// user.PUT("/update/:id")
 	}
 }
