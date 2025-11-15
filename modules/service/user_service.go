@@ -5,6 +5,8 @@ import (
 	"api/modules/model"
 	"api/modules/repository"
 	"net/http"
+	"strconv"
+
 	// "strconv"
 
 	"github.com/gin-gonic/gin"
@@ -14,6 +16,7 @@ import (
 type UserService interface {
 	Create(ctx *gin.Context)
 	GetAllUser(ctx *gin.Context)
+	FindById(ctx *gin.Context)
 	// Update(ctx *gin.Context)
 }
 
@@ -72,4 +75,31 @@ func createEmail(name, email string) {
 		<p>Akun kamu berhasil dibuat dengan email: ` + email + `</p>
 	`
 	helper.SendEmail(email, "Success Create Account", body)
+}
+
+func (u *userService) FindById(ctx *gin.Context) {
+	var id = ctx.Param("id")
+	
+	value, err := strconv.ParseUint(id, 10, 16)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"error" : err,
+		})
+		return
+	}
+
+	result, err := u.repository.FindById(value)
+	if err == nil {
+		if result == nil{
+			ctx.JSON(http.StatusNotFound, gin.H{
+				"error":"teacher not found",
+			})
+			return
+		}
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"error" : "something wrong in our server",
+		})
+	}
+
+	ctx.JSON(http.StatusOK, result)
 }

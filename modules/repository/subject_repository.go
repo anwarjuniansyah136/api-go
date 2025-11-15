@@ -10,6 +10,7 @@ import (
 type SubjectRepository interface {
 	Save(subject model.Subject) (*model.Subject, error)
 	FindAll() (*[]model.Subject, error)
+	FindById(id uint64) (*model.Subject, error)
 }
 
 type subjectRepository struct {
@@ -23,9 +24,13 @@ func NewSubjectRepository(db *gorm.DB) SubjectRepository {
 }
 
 func (s *subjectRepository) Save(subject model.Subject) (*model.Subject, error) {
-	subject.CreateAt = time.Now()
+	subject.UpdateAt = time.Now()
 
-	if err := s.conn.Create(&subject).Error; err != nil {
+	if subject.ID == 0 {
+		subject.CreateAt = time.Now()
+	}
+
+	if err := s.conn.Save(&subject).Error; err != nil {
 		return nil, err
 	}
 
@@ -41,4 +46,17 @@ func (s *subjectRepository) FindAll() (*[]model.Subject, error) {
 	}
 
 	return &subjects, nil
+}
+
+func (s *subjectRepository) FindById(id uint64) (*model.Subject, error) {
+	var subject model.Subject
+
+	err := s.conn.Where("id = ?", id).First(&subject).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return &subject, nil
 }

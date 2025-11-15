@@ -4,6 +4,7 @@ import (
 	"api/modules/model"
 	"api/modules/repository"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -12,6 +13,7 @@ import (
 type SchoolService interface {
 	Create(ctx *gin.Context)
 	GetAllUser(ctx *gin.Context)
+	FindById(ctx *gin.Context)
 }
 
 type schoolService struct {
@@ -29,23 +31,23 @@ func (s *schoolService) Create(ctx *gin.Context) {
 
 	if err := ctx.ShouldBindJSON(&schoolRequest); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"error" : err,
+			"error": err,
 		})
 		return
 	}
 
 	school := model.School{
-		SchoolName: schoolRequest.SchoolName,
-		Address: schoolRequest.Address,
-		Latitude: schoolRequest.Latitude,
-		Longitude: schoolRequest.Longitude,
+		SchoolName:  schoolRequest.SchoolName,
+		Address:     schoolRequest.Address,
+		Latitude:    schoolRequest.Latitude,
+		Longitude:   schoolRequest.Longitude,
 		RadiusMeter: schoolRequest.RadiusMeter,
 	}
 
 	result, err := s.repository.Save(school)
 	if err != nil {
 		ctx.JSON(http.StatusUnprocessableEntity, gin.H{
-			"error" : err,
+			"error": err,
 		})
 		return
 	}
@@ -57,9 +59,36 @@ func (s *schoolService) GetAllUser(ctx *gin.Context) {
 	result, err := s.repository.FindAll()
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, gin.H{
+			"error": err,
+		})
+		return
+	}
+	ctx.JSON(http.StatusOK, result)
+}
+
+func (s *schoolService) FindById(ctx *gin.Context) {
+	var id = ctx.Param("id")
+
+	value, err := strconv.ParseUint(id, 10, 16)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error" : err,
 		})
 		return
 	}
+
+	result, err := s.repository.FindById(value)
+	if err == nil {
+		if result == nil{
+			ctx.JSON(http.StatusNotFound, gin.H{
+				"error":"teacher not found",
+			})
+			return
+		}
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"error" : "something wrong in our server",
+		})
+	}
+
 	ctx.JSON(http.StatusOK, result)
 }

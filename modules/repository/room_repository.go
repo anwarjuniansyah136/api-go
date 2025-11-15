@@ -10,6 +10,7 @@ import (
 type RoomRepository interface {
 	Save(room model.Room) (*model.Room, error)
 	FindAll() (*[]model.Room, error)
+	FindById(id uint64) (*model.Room, error)
 }
 
 type roomRepository struct {
@@ -23,9 +24,11 @@ func NewRoomRepository(db *gorm.DB) RoomRepository {
 }
 
 func (r *roomRepository) Save(room model.Room) (*model.Room, error) {
-	room.CreateAt = time.Now()
+	if room.ID == 0 {
+		room.CreateAt = time.Now()
+	}
 
-	if err := r.conn.Create(&room).Error; err != nil {
+	if err := r.conn.Save(&room).Error; err != nil {
 		return nil, err
 	}
 
@@ -41,4 +44,17 @@ func (r *roomRepository) FindAll() (*[]model.Room, error) {
 	}
 
 	return &rooms, nil
+}
+
+func (r *roomRepository) FindById(id uint64) (*model.Room, error) {
+	var room model.Room
+
+	err := r.conn.Where("id = ?", id).First(&room).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return &room, nil
 }

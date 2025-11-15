@@ -10,6 +10,7 @@ import (
 type ScheduleClassRepository interface {
 	Save(scheduleClass model.ScheduleClass) (*model.ScheduleClass, error)
 	FindAll() (*[]model.ScheduleClass, error)
+	FindById(id uint64) (*model.ScheduleClass, error)
 }
 
 type scheduleClassRepository struct {
@@ -23,9 +24,12 @@ func NewScheduleRepository(db *gorm.DB) ScheduleClassRepository {
 }
 
 func (s *scheduleClassRepository) Save(scheduleClass model.ScheduleClass) (*model.ScheduleClass, error) {
-	scheduleClass.CreateAt = time.Now()
+	scheduleClass.UpdateAt = time.Now()
+	if scheduleClass.ID == 0 {
+		scheduleClass.CreateAt = time.Now()
+	}
 
-	if err := s.conn.Create(&scheduleClass).Error; err != nil {
+	if err := s.conn.Save(&scheduleClass).Error; err != nil {
 		return nil, err
 	}
 
@@ -41,4 +45,17 @@ func (s *scheduleClassRepository) FindAll() (*[]model.ScheduleClass, error) {
 	}
 
 	return &scheduleClasses, nil
+}
+
+func (s *scheduleClassRepository) FindById(id uint64) (*model.ScheduleClass, error) {
+	var scheduleClass model.ScheduleClass
+
+	err := s.conn.Where("id = ?", id).First(&scheduleClass).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return &scheduleClass, nil
 }

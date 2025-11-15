@@ -10,6 +10,7 @@ import (
 type AttendanceSessionRepository interface {
 	Save(attendanceSession model.AttendanceSession) (*model.AttendanceSession, error)
 	FindAll() (*[]model.AttendanceSession, error)
+	FindById(id uint64) (*model.AttendanceSession, error)
 }
 
 type attendanceSessionRepository struct {
@@ -23,10 +24,12 @@ func NewAttendanceSessionRepository(db *gorm.DB) AttendanceSessionRepository {
 }
 
 func (a *attendanceSessionRepository) Save(attendanceSession model.AttendanceSession) (*model.AttendanceSession, error) {
-	attendanceSession.CreatedAt = time.Now()
 	attendanceSession.School.UpdateAt = time.Now()
+	if attendanceSession.ID == 0 {
+		attendanceSession.CreatedAt = time.Now()
+	}
 
-	if err := a.conn.Create(&attendanceSession).Error; err != nil {
+	if err := a.conn.Save(&attendanceSession).Error; err != nil {
 		return nil, err
 	}
 
@@ -42,4 +45,18 @@ func (a *attendanceSessionRepository) FindAll() (*[]model.AttendanceSession, err
 	}
 
 	return &attendanceSessions, nil
+}
+
+func (a *attendanceSessionRepository) FindById(id uint64) (*model.AttendanceSession, error) {
+	var attendanceSession model.AttendanceSession
+
+	err := a.conn.Where("id = ?", id).First(&attendanceSession).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	return &attendanceSession, nil
 }

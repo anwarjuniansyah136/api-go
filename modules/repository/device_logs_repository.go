@@ -10,6 +10,7 @@ import (
 type DeviceLogsRepository interface {
 	Save(device model.DeviceLog) (*model.DeviceLog, error)
 	FindAll() (*[]model.DeviceLog, error)
+	FindById(id uint64) (*model.DeviceLog, error)
 }
 
 type deviceLogsRepository struct {
@@ -23,9 +24,11 @@ func NewDeviceLogsRepository(db *gorm.DB) DeviceLogsRepository {
 }
 
 func (d *deviceLogsRepository) Save(device model.DeviceLog) (*model.DeviceLog, error) {
-	device.CreateAt = time.Now()
+	if device.ID == 0 {
+		device.CreateAt = time.Now()
+	}
 
-	if err := d.conn.Create(&device).Error; err != nil {
+	if err := d.conn.Save(&device).Error; err != nil {
 		return nil, err
 	}
 
@@ -41,4 +44,17 @@ func (d *deviceLogsRepository) FindAll() (*[]model.DeviceLog, error) {
 	}
 
 	return &deviceLogs, nil
+}
+
+func (d *deviceLogsRepository) FindById(id uint64) (*model.DeviceLog, error) {
+	var device model.DeviceLog
+
+	err := d.conn.Where("id = ?", id).First(&device).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return &device, nil
 }

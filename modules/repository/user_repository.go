@@ -28,10 +28,13 @@ func NewUserRepository(db *gorm.DB) UserRepository {
 }
 
 func (u *userRepository) Save(user model.User) (*model.User, error) {
-	user.CreateAt = time.Now()
 	user.UpdateAt = time.Now()
 
-	if err := u.conn.Create(&user).Error; err != nil {
+	if user.ID == 0 {
+		user.CreateAt = time.Now()
+	}
+
+	if err := u.conn.Save(&user).Error; err != nil {
 		return nil, err
 	}
 	return &user, nil
@@ -39,7 +42,7 @@ func (u *userRepository) Save(user model.User) (*model.User, error) {
 
 func (u *userRepository) FindById(id uint64) (*model.User, error) {
 	var user model.User
-	err := u.conn.Where("LOWER(id) = LOWER(?)", id).First(&user).Error
+	err := u.conn.Where("id = ?", id).First(&user).Error
 
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
