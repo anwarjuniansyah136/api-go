@@ -22,12 +22,12 @@ type AttendanceRecord struct {
 	School School `json:"school" binding:"required" gorm:"foreignKey:SchoolID;references:ID"`
 }
 
-type AttendanceRecordCreate struct {
+type AttendanceRecordCreateRequest struct {
 	SessionID uint64 `json:"session_id" binding:"required"`
 	StudentID uint64 `json:"student_id" binding:"required"`
 	CheckinTime string `json:"checkin_time" binding:"required"`
-	Latitude string `json:"latitude" binding:"required"`
-	Longitude string `json:"longitude" binding:"required"`
+	Latitude float64 `json:"latitude" binding:"required"`
+	Longitude float64 `json:"longitude" binding:"required"`
 	SelfieURL string `json:"selfie_url" binding:"required"`
 	DistanceFrom float64 `json:"distance_from" binding:"required"`
 	SchoolID uint64 `json:"school_id" binding:"required"`

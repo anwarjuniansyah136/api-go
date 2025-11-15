@@ -14,9 +14,9 @@ type Student struct {
 	Room Room `json:"room" binding:"required" gorm:"foreignKey:RoomID;references:ID"`
 }
 
-type StudentCreate struct {
+type StudentCreateRequest struct {
 	UserID uint64 `json:"user_id" binding:"required"`
-	NISN uint64 `json:"nisn" binding:"required"`
+	NISN string `json:"nisn" binding:"required"`
 	RoomID uint64 `json:"room_id" binding:"required"`
 	AcademicYear int `json:"academic_year" binding:"required"`
 }

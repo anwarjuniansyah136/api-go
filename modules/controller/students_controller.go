@@ -29,5 +29,6 @@ func (s *studentsController) Init() {
 	student := s.apiRoutes.Group("/v1/students")
 	{
 		student.POST("/create", studentService.Create)
+		student.GET("/find-all", studentService.GetAllStudents)
 	}
 }

@@ -11,7 +11,7 @@ type Room struct {
 	School School `json:"school" binding:"required" gorm:"foreignKey:SchoolID;references:ID"`
 }
 
-type RoomCreate struct {
+type RoomCreateRequest struct {
 	Name string `json:"name" binding:"required"`
-	SchoolID string `json:"school_id" binding:"required"`
+	SchoolID uint64 `json:"school_id" binding:"required"`
 }

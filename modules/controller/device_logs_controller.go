@@ -30,5 +30,6 @@ func (d *deviceLogController) Init() {
 	deviceLogs := d.apiRoutes.Group("/v1/device-logs")
 	{
 		deviceLogs.POST("/create", deviceLogService.Create)
+		deviceLogs.GET("/find-all", deviceLogService.GetAllDevice)
 	}
 }

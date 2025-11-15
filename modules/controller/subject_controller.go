@@ -30,5 +30,6 @@ func (s *subjectController) Init() {
 	subject := s.apiRoutes.Group("/subject")
 	{
 		subject.POST("/create", subjectService.Create)
+		subject.GET("/find-all", subjectService.GetAllSubject)
 	}
 }

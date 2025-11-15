@@ -30,5 +30,6 @@ func (t *teacherController) Init() {
 	teacher := t.apiRoutes.Group("/v1/teacher")
 	{
 		teacher.POST("/create", teacherService.Create)
+		teacher.GET("/find-all", teacherService.GetAllTeacher)
 	}
 }

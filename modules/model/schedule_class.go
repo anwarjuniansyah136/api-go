@@ -20,7 +20,7 @@ type ScheduleClass struct {
 	Room Room `json:"room" binding:"required" gorm:"foreignKey:RoomID;references:ID"`
 }
 
-type ScheduleClassCreate struct {
+type ScheduleClassCreateRequest struct {
 	SchoolID uint64 `json:"school_id" binding:"required"`
 	ClassName string `json:"class_name" binding:"required"`
 	SubjectID uint64 `json:"subject_id" binding:"required"`

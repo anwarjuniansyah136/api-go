@@ -14,8 +14,8 @@ type Subject struct {
 	School School `json:"school" binding:"required" gorm:"foreignKey:SchoolID;references:ID"`
 }
 
-type SubjectCreate struct {
+type SubjectCreateRequest struct {
 	SubjectCode string `json:"sucject_code" binding:"required"`
 	SubjectName string `json:"subject_name" binding:"required"`
-	IsActive *bool `json:"is_active"`
+	IsActive bool `json:"is_active"`
 }

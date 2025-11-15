@@ -15,7 +15,7 @@ type AttendanceSession struct {
 	User User `json:"user" binding:"required" gorm:"foreignKey:CreatedBy;references:ID"`
 }
 
-type AttendanceSessionCreate struct {
+type AttendanceSessionCreateRequest struct {
 	SchoolID uint64 `json:"school_id" binding:"required"`
 	Name string `json:"name" binding:"required"`
 	StartTime string `json:"start_time" binding:"required"`

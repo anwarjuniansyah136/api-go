@@ -30,5 +30,6 @@ func (a *attendaceRecordController) Init() {
 	attendanceRecord := a.apiRoutes.Group("/v1/attendance-record")
 	{
 		attendanceRecord.POST("/create", attendanceRecordService.Create)
+		attendanceRecord.GET("/find-all", attendanceRecordService.GetAllAttendanceRecord)
 	}
 }

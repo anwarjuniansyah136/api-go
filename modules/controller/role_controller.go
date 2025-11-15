@@ -30,5 +30,6 @@ func (r *roleController) Init() {
 	role := r.apiRoutes.Group("/v1/role")
 	{
 		role.POST("/create", roleService.Create)
+		role.GET("/find-all", roleService.GetAllRole)
 	}
 }

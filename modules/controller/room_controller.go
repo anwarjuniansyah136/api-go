@@ -30,5 +30,6 @@ func (r *roomController) Init() {
 	room := r.apiRoutes.Group("/v1/room")
 	{
 		room.POST("/create", roomService.Create)
+		room.GET("/find-all", roomService.GetAllRole)
 	}
 }

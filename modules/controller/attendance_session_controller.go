@@ -30,5 +30,6 @@ func (a *attendanceSessionController) Init() {
 	attendanceSession := a.apiRoutes.Group("/v1/attendance-session")
 	{
 		attendanceSession.POST("/create", attendanceSessionService.Create)
+		attendanceSession.GET("/find-all", attendanceSessionService.GetAllAttendanceSession)
 	}
 }

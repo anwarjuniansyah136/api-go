@@ -30,5 +30,6 @@ func (s *scheduleClassController) Init() {
 	scheduleClass := s.apiRoutes.Group("/v1/schedule-class")
 	{
 		scheduleClass.POST("/create", scheduleClassService.Create)
+		scheduleClass.GET("/find-all", scheduleClassService.GetAllScheduleClass)
 	}
 }
