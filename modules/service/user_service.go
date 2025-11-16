@@ -23,20 +23,39 @@ type UserService interface {
 	ForgotPassword(ctx *gin.Context)
 	ConfirmationCode(ctx *gin.Context)
 	ResetPassword(ctx *gin.Context)
+	UpdateRole(ctx *gin.Context)
+	UpdateSchool(ctx *gin.Context)
 }
 
 type userService struct {
-	repository repository.UserRepository
+	repository     repository.UserRepository
+	roleRepository repository.RoleRepository
+	schoolRepository repository.SchoolRepository
 }
 
 func NewUserService(db *gorm.DB) UserService {
 	return &userService{
 		repository: repository.NewUserRepository(db),
+		roleRepository: repository.NewroleRepository(db),
+		schoolRepository: repository.NewSchoolRepository(db),
 	}
 }
 
 func (u *userService) ResetPassword(ctx *gin.Context) {
-	panic("unimplemented")
+	result, err := u.repository.FindByEmail(ctx.Param("query"))
+	if err != nil {
+		response.Error(ctx, 422, "Invalid Request", err)
+		return
+	}
+
+	result.Password = helper.HashedPassword(ctx.Param("password"))
+
+	user, err := u.repository.Save(*result)
+	if err != nil {
+		response.Error(ctx, 422, "Invalid Request", err)
+	}
+
+	response.Success(ctx, user)
 }
 
 func (u *userService) ConfirmationCode(ctx *gin.Context) {
@@ -114,7 +133,7 @@ func (u *userService) Login(ctx *gin.Context) {
 	}
 
 	responseFromBE := response.UserResponse{
-		ID: result.ID,
+		ID:    result.ID,
 		Email: result.Email,
 		Token: token,
 	}
@@ -190,4 +209,73 @@ func (u *userService) FindById(ctx *gin.Context) {
 
 func binding(codeFromUser, codeFromData string) bool {
 	return codeFromData == codeFromUser
+}
+
+func (u *userService) UpdateRole(ctx *gin.Context) {
+	roleId, err := strconv.ParseUint(ctx.Param("query"), 10, 64)
+	if err != nil {
+		response.Error(ctx, 404, "Not Found", err)
+		return
+	}
+	claims, ok := ctx.MustGet("user").(*jwt.JWTClaim)
+	if !ok {
+		response.Error(ctx, 400, "Cannot Parse Claim", nil)
+		return
+	}
+
+	user, err := u.repository.FindById(claims.UserID)
+	if err != nil {
+		response.Error(ctx, 404, "Not Found", err)
+		return
+	}
+
+	role, err := u.roleRepository.FindById(roleId)
+	if err != nil {
+		response.Error(ctx, 404, "Not Found", err)
+		return
+	}
+
+	user.RoleID = &role.ID
+	user.Role = *role
+
+	result, err := u.repository.Save(*user)
+	if err != nil {
+		response.Error(ctx, 422, "Invalid Request", err)
+		return
+	}
+
+	response.Success(ctx, result)
+}
+
+func (u *userService) UpdateSchool(ctx *gin.Context) {
+	schoolId, err := strconv.ParseUint(ctx.Param("query"), 10, 64)
+	if err != nil {
+		response.Error(ctx, 400, "Bad Request", err)
+		return
+	}
+
+	claims, ok := ctx.MustGet("user").(*jwt.JWTClaim)
+	if !ok {
+		response.Error(ctx, 400, "Cannot Parse Claim", nil)
+		return
+	}
+
+	user, err := u.repository.FindById(claims.UserID)
+	if err != nil {
+		response.Error(ctx, 404, "Not Found", err)
+		return
+	}
+
+	school, err := u.schoolRepository.FindById(schoolId)
+	if err != nil {
+		response.Error(ctx, 404, "Not Found", err)
+		return
+	}
+
+	user.School = *school
+	user.SchoolID = &school.ID
+
+	u.repository.Save(*user)
+
+	response.Success(ctx, user)
 }

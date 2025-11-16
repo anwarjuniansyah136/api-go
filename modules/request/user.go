@@ -9,7 +9,6 @@ type UserCreateRequest struct{
 
 type UserUpdateRequest struct{
 	SchoolID *uint64    `json:"school_id"`
-	RoleID   *uint64    `json:"school_id"`
 	FullName string    `json:"full_name"`
 	Email    string    `json:"email"`
 	Password *string    `json:"password"`
