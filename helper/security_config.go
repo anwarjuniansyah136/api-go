@@ -1,7 +1,10 @@
 package helper
 
 import (
+	"fmt"
 	"log"
+	"math/rand"
+	"time"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -20,3 +23,9 @@ func CheckPassword(hashedPassword, plainPassword string) bool{
 	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(plainPassword))
 	return err == nil
 }
+
+func GenerateOTP() string {
+	rand.Seed(time.Now().UnixNano())
+	return fmt.Sprintf("%06d", rand.Intn(1000000))
+}
+

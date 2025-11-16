@@ -1,6 +1,10 @@
 package helper
 
-import "gopkg.in/gomail.v2"
+import (
+	"net/smtp"
+
+	"gopkg.in/gomail.v2"
+)
 
 func SendEmail(to, subject, body string) error {
 	from := "juniansyahanwar@gmail.com"
@@ -19,4 +23,13 @@ func SendEmail(to, subject, body string) error {
 	}
 
 	return nil
+}
+
+func SendOTPByEmail(to, message string) error {
+	from := "juniansyahanwar@gmail.com"
+	password := "mhlw utii qoam bkur"
+
+	msg := "Subject: Reset Password\r\n\r\n"
+	auth := smtp.PlainAuth("", from, password, "smtp.gmail.com")
+	return smtp.SendMail("smtp.gmail.com:587", auth, from, []string{to}, []byte(msg))
 }

@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"api/modules/middleware"
 	"api/modules/service"
 
 	"github.com/gin-gonic/gin"
@@ -27,7 +28,7 @@ func NewTeacherController(apiR *gin.RouterGroup, db *gorm.DB, ver string) Teache
 
 func (t *teacherController) Init() {
 	teacherService := service.NewTeacherService(t.database)
-	teacher := t.apiRoutes.Group("/v1/teacher")
+	teacher := t.apiRoutes.Group("/v1/teacher", middleware.AuthMiddleWare())
 	{
 		teacher.POST("/create", teacherService.Create)
 		teacher.GET("/find-all", teacherService.GetAllTeacher)

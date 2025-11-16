@@ -14,12 +14,25 @@ type UserRepository interface {
 	FindAll() (*[]model.User, error)
 	DeleteByID(id uint64) error
 	Delete(user *model.User) error
+	FindByUsername(username string) (*model.User, error)
 }
 
 type userRepository struct {
 	conn *gorm.DB
 }
 
+func (u *userRepository) FindByUsername(username string) (*model.User, error) {
+	var user model.User
+
+	err := u.conn.Where("username = ?", username).First(&user).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return &user, nil
+}
 
 func NewUserRepository(db *gorm.DB) UserRepository {
 	return &userRepository{
@@ -55,7 +68,7 @@ func (u *userRepository) FindById(id uint64) (*model.User, error) {
 
 func (u *userRepository) FindByEmail(email string) (*model.User, error) {
 	var user model.User
-	err := u.conn.Where("LOWER(email) = LOWER(?)", email).First(&user).Error
+	err := u.conn.Where("email = ?", email).First(&user).Error
 
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
@@ -98,7 +111,7 @@ func (u *userRepository) Delete(user *model.User) error {
 		return result.Error
 	}
 
-	if result.RowsAffected == 0{
+	if result.RowsAffected == 0 {
 		return gorm.ErrRecordNotFound
 	}
 

@@ -11,25 +11,12 @@ type User struct {
 	Password string    `json:"-" gorm:"type:text;not null"`
 	Profile  string    `json:"profile" gorm:"size:255"`
 	IsActive bool      `json:"is_active" gorm:"default:true"`
+	Code string `json:"code" gorm:"size:50"`
+	ExpiresAt time.Time `json:"-"`
+	Veridfied bool `json:"-" gorm:"default:false"`
 	CreateAt time.Time `json:"-"`
 	UpdateAt time.Time `json:"-"`
 
 	Role   Role   `json:"role" gorm:"foreignKey:RoleID;references:ID"`
 	School School `json:"school" gorm:"foreignKey:SchoolID;references:ID"`
-}
-
-type UserCreateRequest struct{
-	FullName string `json:"full_name" binding:"required"`
-	Email string `json:"email" binding:"required"`
-	Password string `json:"password" binding:"required"`
-}
-
-type UserUpdateRequest struct{
-	SchoolID *uint64    `json:"school_id"`
-	RoleID   *uint64    `json:"school_id"`
-	FullName string    `json:"full_name"`
-	Email    string    `json:"email"`
-	Password *string    `json:"-"`
-	Profile  string    `json:"profile"`
-	IsActive bool      `json:"is_active"`
 }

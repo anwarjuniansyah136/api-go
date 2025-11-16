@@ -31,6 +31,8 @@ func (u *userController) Init() {
 	{
 		user.POST("/create", userService.Create)
 		user.GET("/find-all", userService.GetAllUser)
-		// user.PUT("/update/:id")
+		user.POST("/login", userService.Login)
+		user.POST("/forgot/:query", userService.ForgotPassword)
+		user.GET("/confirm-code", userService.ConfirmationCode)
 	}
 }
