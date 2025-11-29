@@ -175,14 +175,6 @@ func (u *userService) GetAllUser(ctx *gin.Context) {
 	response.Success(ctx, result)
 }
 
-func createEmail(name, email string) {
-	body := `
-		<h2>Selamat datang, ` + name + `!</h2>
-		<p>Akun kamu berhasil dibuat dengan email: ` + email + `</p>
-	`
-	helper.SendEmail(email, "Success Create Account", body)
-}
-
 func (u *userService) FindById(ctx *gin.Context) {
 	var id = ctx.Param("id")
 
@@ -205,10 +197,6 @@ func (u *userService) FindById(ctx *gin.Context) {
 	}
 
 	response.Success(ctx, result)
-}
-
-func binding(codeFromUser, codeFromData string) bool {
-	return codeFromData == codeFromUser
 }
 
 func (u *userService) UpdateRole(ctx *gin.Context) {
@@ -278,4 +266,16 @@ func (u *userService) UpdateSchool(ctx *gin.Context) {
 	u.repository.Save(*user)
 
 	response.Success(ctx, user)
+}
+
+func binding(codeFromUser, codeFromData string) bool {
+	return codeFromData == codeFromUser
+}
+
+func createEmail(name, email string) {
+	body := `
+		<h2>Selamat datang, ` + name + `!</h2>
+		<p>Akun kamu berhasil dibuat dengan email: ` + email + `</p>
+	`
+	helper.SendEmail(email, "Success Create Account", body)
 }
